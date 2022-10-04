@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const path = require('path');
+const { readTalkers } = require("../src/utils/fsUtils")
 
 const app = express();
 app.use(bodyParser.json());
@@ -15,11 +16,8 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', async (_req, res) => {
-  const data = await fs.readFile(path.resolve(__dirname, '../src/talker.json'));
-  const list = JSON.parse(data);
-  console.log(list);
-
-  res.status(200).json(list);
+  const data = await readTalkers()
+  res.status(200).json(data);
 });
 
 app.listen(PORT, () => {
