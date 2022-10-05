@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { readTalkers, findTalkerById, addNewTalker } = require('./utils/fsUtils');
+const { readTalkers, findTalkerById, addNewTalker, editTalker } = require('./utils/fsUtils');
 const generateToken = require('./utils/token');
 const emailValidation = require('./middlewares/emailValidation');
 const passwordValidation = require('./middlewares/passwordValidation');
@@ -57,6 +57,19 @@ rateValidation, async (req, res) => {
   const newTalker = await addNewTalker(newTalkerEntry);
 
   res.status(201).json(newTalker);
+});
+
+app.put('/talker/:id',
+tokenValidation,
+nameValidation,
+ageValidation,
+talkValidation,
+watchedAtValidation,
+rateValidation, async (req, res) => {
+  const newInfo = req.body;
+  const { id } = req.params;
+  const editedTalker = await editTalker(newInfo, id);
+  res.status(HTTP_OK_STATUS).json(editedTalker);
 });
 
 app.listen(PORT, () => {
