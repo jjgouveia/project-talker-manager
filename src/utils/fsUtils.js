@@ -22,7 +22,15 @@ async function findTalkerById(talkerId) {
     return talker;
     } catch (error) {
         console.error(`Can't find referencies: ${error}`);
+        return null;
     }
+}
+
+async function findTalkerByName(searchTerm) {
+    const talkersList = await readTalkers();
+    const streinedTalkers = talkersList.filter(({ name }) => 
+        name.toLowerCase().includes(searchTerm.toLowerCase()));
+        return streinedTalkers;
 }
 
 async function addNewTalker(newPerson) {
@@ -34,6 +42,7 @@ async function addNewTalker(newPerson) {
         return newTalker;
     } catch (error) {
         console.error(`I/O Error: ${error}`);
+        return null;
     }
 }
 
@@ -47,6 +56,18 @@ async function editTalker(newInfo, talkerId) {
         return editedTalker;
     } catch (error) {
         console.error(`Can't edit: ${error}`);
+        return null;
+    }
+}
+
+async function deleteTalker(talkerId) {
+    try {
+        const talkersList = await readTalkers();
+        const newList = talkersList.filter(({ id }) => id !== Number(talkerId));
+        await fs.writeFile(pathname, JSON.stringify(newList));
+    } catch (error) {
+        console.error(`Can't delete: ${error}`);
+        return null;
     }
 }
 
@@ -55,4 +76,6 @@ module.exports = {
     findTalkerById,
     addNewTalker,
     editTalker,
+    deleteTalker,
+    findTalkerByName,
 };

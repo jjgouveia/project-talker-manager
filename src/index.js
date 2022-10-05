@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { readTalkers, findTalkerById, addNewTalker, editTalker } = require('./utils/fsUtils');
+const { readTalkers,
+  findTalkerById,
+  addNewTalker, editTalker, deleteTalker, findTalkerByName } = require('./utils/fsUtils');
 const generateToken = require('./utils/token');
 const emailValidation = require('./middlewares/emailValidation');
 const passwordValidation = require('./middlewares/passwordValidation');
@@ -26,6 +28,12 @@ app.get('/', (_request, response) => {
 app.get('/talker', async (_req, res) => {
   const data = await readTalkers();
   res.status(HTTP_OK_STATUS).json(data);
+});
+
+app.get('/talker/search', tokenValidation, async (req, res) => {
+  const { q } = req.query;
+  const streinedTalkers = await findTalkerByName(q);
+  res.status(HTTP_OK_STATUS).json(streinedTalkers);
 });
 
 app.get('/talker/:id', async (req, res) => {
@@ -70,6 +78,12 @@ rateValidation, async (req, res) => {
   const { id } = req.params;
   const editedTalker = await editTalker(newInfo, id);
   res.status(HTTP_OK_STATUS).json(editedTalker);
+});
+
+app.delete('/talker/:id', tokenValidation, async (req, res) => {
+  const { id } = req.params;
+  await deleteTalker(id);
+  res.sendStatus(204).end();
 });
 
 app.listen(PORT, () => {
