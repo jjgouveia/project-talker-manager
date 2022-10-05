@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const HTTP_NOT_FOUND_STATUS = 404;
-const PORT = '3000';
+// const PORT = '3000';
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -86,6 +86,8 @@ app.delete('/talker/:id', tokenValidation, async (req, res) => {
   res.sendStatus(204).end();
 });
 
-app.listen(PORT, () => {
-  console.log('Online - 3000');
-});
+// app.listen(PORT, () => {
+//   console.log('Online - 3000');
+// });
+
+module.exports = app;
